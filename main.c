@@ -3,28 +3,6 @@
 #include <time.h>    /* time */
 #include <ncurses.h> /* ... */
 
-/* DEBUGGING
-void printbin(int x) {
-	while (x) {
-		if (x&1)
-			putchar('1');
-		else
-			putchar('0');
-		x>>=1;
-	}
-	putchar('\n');
-}
-*/
-
-/* CLEAR SCREEN */
-void cls() {
-	int i, j;
-	fputs("\033[1;1H", stdout);
-	for (i=0; i<10; i++)
-		puts("                    ");
-	fputs("\033[1;1H", stdout);
-}
-
 /********** TT ***********/
 
 int *tt; /* ROW MAJOR 10x10 BITARRAY IN INT[4] */
@@ -60,12 +38,9 @@ void printtt() {
 			if (rtt(x, y)) {
 				attron(COLOR_PAIR(3));
 				addstr("  ");
-				//fputs("\033[47m  \033[0m", stdout);
 				attroff(COLOR_PAIR(3));
 			} else
 				addstr("  ");
-				//fputs("  ", stdout);
-		//puts("\033[42m  \033[0m");
 		attron(COLOR_PAIR(1));
 		addstr("  ");
 		attroff(COLOR_PAIR(1));
@@ -74,7 +49,6 @@ void printtt() {
 	attron(COLOR_PAIR(1));
 	addstr("                      ");
 	attroff(COLOR_PAIR(1));
-	//puts("\033[42m                      \033[0m");
 }
 
 void updatett() {
@@ -130,45 +104,14 @@ inline int rbk(int n, int x, int y) {
 	return bk[n] & (1<<i);
 }
 
-/* WRITE TRUE BK[N]
-inline void wtbk(int n, int x, int y) {
-	int i = 5*y+x;
-	bk[n] |= (1<<i);
-}
-*/
-
-/* WRITE FALSE BK[N]
-inline void wfbk(int n, int x, int y) {
-	int i = 5*y+x;
-	bk[n] &= ~(1<<i);
-}
-*/
-
-/* PRINT BK[N] */
-void printbk(int n) {
-	int x, y;
-	for (y=0; y<5; y++) {
-		for (x=0; x<5; x++)
-			if (rbk(n, x, y)) {
-				addch(' ' | A_REVERSE);
-				addch(' ' | A_REVERSE);
-			} else
-				addstr("  ");
-		addch('\n');
-	}
-}
-
 /* PRINT BK[N] AT POS X, Y */
 void printbkpos(int n, int x, int y) {
 	int i, j;
 	attron(COLOR_PAIR(2));
-	//fputs("\033[41m", stdout);
 	for (j=0; j<5; j++)
 		for (i=0; i<5; i++)
 			if (rbk(n, i, j))
 				mvaddstr(y+j, x+i<<1, "  ");
-				//printf("\033[%d;%dH  ", y+j+1, (x+i)*2+1);
-	//fputs("\033[0m", stdout);
 	attroff(COLOR_PAIR(2));
 }
 
@@ -219,19 +162,14 @@ int main(int argc, char **argv) {
 	init_pair(2, COLOR_WHITE, COLOR_RED);
 	init_pair(3, COLOR_WHITE, COLOR_WHITE);
 	while (1) {
-		//printtt();
 		bknum = rand()%NBK; // PSEUDO-RANDOM !
-		//printbk(bknum);
 		f = x = y = 0;
 		while (1) {
-			//cls();
 			clear();
 			printtt();
 			printbkpos(bknum, x, y);
-			//fputs("\033[12;1H", stdout);
 			refresh();
 			c = getch();
-			//scanf("%c", &c);
 			mvprintw(12, 1, "%d", c);
 			switch (c) {
 			case 4 : {
@@ -265,15 +203,6 @@ int main(int argc, char **argv) {
 			}
 			if (f) break;
 		}
-		/*
-		while (1) {
-			fputs("x y ? ", stdout);
-			scanf("%d %d", &x, &y);
-			if (bkfits(bknum, x, y)!=1)
-				continue;
-			break;
-		}
-		*/
 		bkinsert(bknum, x, y);
 		updatett();
 	}
