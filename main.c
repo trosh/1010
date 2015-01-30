@@ -1,6 +1,7 @@
-#include <stdio.h>  /* printf, putchar, fputs */
-#include <stdlib.h> /* calloc, srand, rand */
-#include <time.h>   /* time */
+#include <stdio.h>   /* printf, putchar, fputs, puts */
+#include <stdlib.h>  /* calloc, srand, rand */
+#include <time.h>    /* time */
+#include <ncurses.h> /* ... */
 
 /* DEBUGGING
 void printbin(int x) {
@@ -56,13 +57,24 @@ void printtt() {
 	for (y=0; y<10; y++) {
 		//printf("%d ", y);
 		for (x=0; x<10; x++)
-			if (rtt(x, y))
-				fputs("\033[47m  \033[0m", stdout);
-			else
-				fputs("  ", stdout);
-		puts("\033[42m  \033[0m");
+			if (rtt(x, y)) {
+				attron(COLOR_PAIR(3));
+				addstr("  ");
+				//fputs("\033[47m  \033[0m", stdout);
+				attroff(COLOR_PAIR(3));
+			} else
+				addstr("  ");
+				//fputs("  ", stdout);
+		//puts("\033[42m  \033[0m");
+		attron(COLOR_PAIR(1));
+		addstr("  ");
+		attroff(COLOR_PAIR(1));
+		addch('\n');
 	}
-	puts("\033[42m                      \033[0m");
+	attron(COLOR_PAIR(1));
+	addstr("                      ");
+	attroff(COLOR_PAIR(1));
+	//puts("\033[42m                      \033[0m");
 }
 
 void updatett() {
@@ -137,28 +149,33 @@ void printbk(int n) {
 	int x, y;
 	for (y=0; y<5; y++) {
 		for (x=0; x<5; x++)
-			if (rbk(n, x, y))
-				fputs("\033[47m  \033[0m", stdout);
-			else
-				fputs("  ", stdout);
-		putchar('\n');
+			if (rbk(n, x, y)) {
+				addch(' ' | A_REVERSE);
+				addch(' ' | A_REVERSE);
+			} else
+				addstr("  ");
+		addch('\n');
 	}
 }
 
 /* PRINT BK[N] AT POS X, Y */
 void printbkpos(int n, int x, int y) {
 	int i, j;
-	fputs("\033[41m", stdout);
+	attron(COLOR_PAIR(2));
+	//fputs("\033[41m", stdout);
 	for (j=0; j<5; j++)
 		for (i=0; i<5; i++)
 			if (rbk(n, i, j))
-				printf("\033[%d;%dH  ", y+j+1, (x+i)*2+1);
-	fputs("\033[0m", stdout);
+				mvaddstr(y+j, x+i<<1, "  ");
+				//printf("\033[%d;%dH  ", y+j+1, (x+i)*2+1);
+	//fputs("\033[0m", stdout);
+	attroff(COLOR_PAIR(2));
 }
 
 /* DOES BLOCK FIT IN TT AT POS X, Y ? */
 int bkfits(int n, int x, int y) {
 	int i, j;
+	char f = 0;
 	for (i=0; i<5; i++)
 		for (j=0; j<5; j++) {
 			if (!rbk(n, i, j))
@@ -166,8 +183,9 @@ int bkfits(int n, int x, int y) {
 			if (x+i>9 || y+j>9)
 				return -1; /* OUT OF BOUNDS */
 			if (rtt(x+i, y+j))
-				return 0;  /* DOES NOT FIT */
+				f = 1; /* DOES NOT FIT */
 		}
+	if (f) return 0;
 	return 1; /* FITS */
 }
 
@@ -186,42 +204,64 @@ int main(int argc, char **argv) {
 	char f, c;
 	tt = (int*)calloc(4, 4); /* !!! HARDCODED SIZEOF(INT) = 4 */
 	srand(time(NULL));
+	initscr();
+	raw();
+	noecho();
+	keypad(stdscr, TRUE);
+	curs_set(0);
+	if (has_colors() == FALSE) {
+		endwin();
+		puts("no color");
+		return 1;
+	}
+	start_color();
+	init_pair(1, COLOR_WHITE, COLOR_GREEN);
+	init_pair(2, COLOR_WHITE, COLOR_RED);
+	init_pair(3, COLOR_WHITE, COLOR_WHITE);
 	while (1) {
 		//printtt();
 		bknum = rand()%NBK; // PSEUDO-RANDOM !
 		//printbk(bknum);
 		f = x = y = 0;
 		while (1) {
-			cls();
+			//cls();
+			clear();
 			printtt();
 			printbkpos(bknum, x, y);
-			fputs("\033[12;1H", stdout);
-			scanf("%c", &c);
+			//fputs("\033[12;1H", stdout);
+			refresh();
+			c = getch();
+			//scanf("%c", &c);
+			mvprintw(12, 1, "%d", c);
 			switch (c) {
-			case 'h' : {
+			case 4 : {
 				if (x>0
 				 && bkfits(bknum, x-1, y)!=-1)
 					x--;
 				break; }
-			case 'j' : {
+			case 2 : {
 				if (y<9
 				 && bkfits(bknum, x, y+1)!=-1)
 					y++;
 				break; }
-			case 'k' : {
+			case 3 : {
 				if (y>0
 				 && bkfits(bknum, x, y-1)!=-1)
 					y--;
 				break; }
-			case 'l' : {
+			case 5 : {
 				if (x<9
 				 && bkfits(bknum, x+1, y)!=-1)
 					x++;
 				break; }
-			case 'g' : {
+			case 10 :
+			case 32 : {
 				if (bkfits(bknum, x, y)==1)
 					f = 1;
 				break; }
+			case 'q' : {
+				endwin();
+				return 0; }
 			}
 			if (f) break;
 		}
@@ -237,5 +277,6 @@ int main(int argc, char **argv) {
 		bkinsert(bknum, x, y);
 		updatett();
 	}
+	endwin();
 	return 0;
 }
