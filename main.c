@@ -1,3 +1,11 @@
+/***********************/
+/*** 1010 COPY       ***/
+/*** BY TROSH        ***/
+/*** FUN TIMES IN C! ***/
+/*** ORIGINAL GAME   ***/
+/*** BY GRAM GAMES   ***/
+/***********************/
+
 #include <stdio.h>   /* printf, putchar, fputs, puts */
 #include <stdlib.h>  /* calloc, srand, rand */
 #include <time.h>    /* time */
@@ -141,6 +149,14 @@ void bkinsert(int n, int x, int y) {
 }
 
 /********** MAIN *********/
+
+/**************************/
+/*** TODO:              ***/
+/*** ADD 3 BLOCKS       ***/
+/*** CHOOSE CURRENT ONE ***/
+/*** CHECK IF DEAD      ***/
+/*** AI                 ***/
+/**************************/
 
 int main(int argc, char **argv) {
 	int bknum, x, y;
