@@ -40,13 +40,13 @@ inline void wftt(int x, int y) {
 /* PRINT TT */
 void printtt() {
 	int x, y;
+	move(0, 0);
 	for (y=0; y<10; y++) {
-		//printf("%d ", y);
 		for (x=0; x<10; x++)
 			if (rtt(x, y)) {
-				attron(COLOR_PAIR(3));
+				attron(COLOR_PAIR(2));
 				addstr("  ");
-				attroff(COLOR_PAIR(3));
+				attroff(COLOR_PAIR(2));
 			} else
 				addstr("  ");
 		attron(COLOR_PAIR(1));
@@ -113,14 +113,17 @@ inline int rbk(int n, int x, int y) {
 }
 
 /* PRINT BK[N] AT POS X, Y */
-void printbkpos(int n, int x, int y) {
-	int i, j;
-	attron(COLOR_PAIR(2));
+void printbk(char n, char x, char y, char c) {
+	char i, j;
+	attron(COLOR_PAIR(c));
 	for (j=0; j<5; j++)
 		for (i=0; i<5; i++)
 			if (rbk(n, i, j))
-				mvaddstr(y+j, x+i<<1, "  ");
-	attroff(COLOR_PAIR(2));
+				if (rtt(x+i, y+j))
+					mvaddstr(y+j, x+i<<1, "xx");
+				else
+					mvaddstr(y+j, x+i<<1, "  ");
+	attroff(COLOR_PAIR(c));
 }
 
 /* DOES BLOCK FIT IN TT AT POS X, Y ? */
@@ -152,15 +155,18 @@ void bkinsert(int n, int x, int y) {
 
 /**************************/
 /*** TODO:              ***/
-/*** ADD 3 BLOCKS       ***/
-/*** CHOOSE CURRENT ONE ***/
-/*** CHECK IF DEAD      ***/
 /*** AI                 ***/
+/*** SCORE              ***/
 /**************************/
 
 int main(int argc, char **argv) {
-	int bknum, x, y;
-	char f, c;
+	char f;      /* FLAG */
+	char c;      /* INPUT CHARACTER */
+	char bks[3]; /* BLOCKS GIVEN TO USER */
+	char bka[3]; /* FLAGS OF BLOCKS AVAILABLE ; TODO -> BITARRAY */
+	char b;      /* INDEX OF USER CHOSEN BLOCK */
+	char sc;     /* SUB COUNTER */
+	char x, y;   /* POSITION OF BLOCK */
 	tt = (int*)calloc(4, 4); /* !!! HARDCODED SIZEOF(INT) = 4 */
 	srand(time(NULL));
 	initscr();
@@ -175,52 +181,115 @@ int main(int argc, char **argv) {
 	}
 	start_color();
 	init_pair(1, COLOR_WHITE, COLOR_GREEN);
-	init_pair(2, COLOR_WHITE, COLOR_RED);
-	init_pair(3, COLOR_WHITE, COLOR_WHITE);
+	init_pair(2, COLOR_WHITE, COLOR_WHITE);
+	init_pair(3, COLOR_WHITE, COLOR_RED);
+	init_pair(4, COLOR_WHITE, COLOR_BLUE);
+	init_pair(5, COLOR_WHITE, COLOR_YELLOW);
+	sc = 0;
 	while (1) {
-		bknum = rand()%NBK; // PSEUDO-RANDOM !
-		f = x = y = 0;
+		if (sc == 0) {
+			bks[0] = rand()%NBK; /* PSEUDO-RANDOM ! */
+			bks[1] = rand()%NBK;
+			bks[2] = rand()%NBK;
+			bka[0] = bka[1] = bka[2] = 1;
+			b = 0;
+			                sc = 1;
+		} else if (sc == 2) sc = 0;
+		else                sc = 2;
+		f = 0;
+		for (c=0; c<3; c++) {
+			if (!bka[c]) continue;
+			for (y=0; y<5; y++) {
+				for (x=0; x<5; x++) {
+					if (bkfits(bks[c], x, y) == 1) {
+						f = 1;
+						break; /* FITS */
+					}
+				}
+				if (f) break;
+			}
+			if (f) break;
+		}
+		if (!f) {
+			attron(COLOR_PAIR(3));
+			mvaddstr(3, 4, "            ");
+			mvaddstr(4, 4, "  YOU LOSE  ");
+			mvaddstr(5, 4, "            ");
+			attroff(COLOR_PAIR(3));
+			getch();
+			break;
+		}
+		f = 0;
+		x = y = 5;
 		while (1) {
 			clear();
 			printtt();
-			printbkpos(bknum, x, y);
+			mvaddch(11,  1, '1');
+			mvaddch(11, 12, '2');
+			mvaddch(11, 24, '3');
+			if (bka[0]) printbk(bks[0],  0, 12, 3);
+			if (bka[1]) printbk(bks[1],  5, 12, 4);
+			if (bka[2]) printbk(bks[2], 10, 12, 5);
+			printbk(bks[b], x, y, b+3);
 			refresh();
 			c = getch();
-			mvprintw(12, 1, "%d", c);
 			switch (c) {
-			case 4 : {
+			case 49 : { /* 1 */
+				if (!bka[0]) break;
+				b = 0;
+				x = y = 5;
+				break; }
+			case 50 : { /* 2 */
+				if (!bka[1]) break;
+				b = 1;
+				x = y = 5;
+				break; }
+			case 51 : { /* 3 */
+				if (!bka[2]) break;
+				b = 2;
+				x = y = 5;
+				break; }
+			case 4 : { /* LEFT */
 				if (x>0
-				 && bkfits(bknum, x-1, y)!=-1)
+				 && bkfits(bks[b], x-1, y)!=-1)
 					x--;
 				break; }
-			case 2 : {
+			case 2 : { /* DOWN */
 				if (y<9
-				 && bkfits(bknum, x, y+1)!=-1)
+				 && bkfits(bks[b], x, y+1)!=-1)
 					y++;
 				break; }
-			case 3 : {
+			case 3 : { /* RIGHT */
 				if (y>0
-				 && bkfits(bknum, x, y-1)!=-1)
+				 && bkfits(bks[b], x, y-1)!=-1)
 					y--;
 				break; }
-			case 5 : {
+			case 5 : { /* UP */
 				if (x<9
-				 && bkfits(bknum, x+1, y)!=-1)
+				 && bkfits(bks[b], x+1, y)!=-1)
 					x++;
 				break; }
-			case 10 :
-			case 32 : {
-				if (bkfits(bknum, x, y)==1)
+			case 10 :   /* ENTER */
+			case 32 : { /* SPACE */
+				if (bkfits(bks[b], x, y)==1)
 					f = 1;
 				break; }
-			case 'q' : {
+			case 'q' : { /* Q */
 				endwin();
 				return 0; }
 			}
 			if (f) break;
 		}
-		bkinsert(bknum, x, y);
+		bkinsert(bks[b], x, y);
+		bka[b] = 0; /* BLOCK B NOT AVAILABLE */
+		for (c=0; c<3; c++) { /* CHOOSE NEW B */
+			if (b==c /* DON'T CHECK BKA[B] */
+			 || !bka[c]) continue;
+			b = c;
+			break;
+		}
 		updatett();
+		if (!(bka[0]+bka[1]+bka[2])) continue;
 	}
 	endwin();
 	return 0;
