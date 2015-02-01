@@ -106,6 +106,8 @@ int bk[NBK] = {1,3,7,15,31,33,
                7201,7300,7399,
                33825,1082401};
 
+//char bkprobs[] = {0,0,0,0,
+
 /* READ BK[N] */
 inline int rbk(int n, int x, int y) {
 	int i = 5*y+x;
