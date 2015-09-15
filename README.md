@@ -17,6 +17,15 @@ HOW TO BUILD
 
 NEEDS NCURSES
 
+HOW TO RUN
+----------
+
+    make run
+
+OR
+
+    ./1010
+
 CONTROLS
 --------
 
