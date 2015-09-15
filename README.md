@@ -10,6 +10,13 @@
     /*** BY GRAM GAMES   ***/
     /***********************/
 
+HOW TO BUILD
+------------
+
+    make
+
+NEEDS NCURSES
+
 CONTROLS
 --------
 
