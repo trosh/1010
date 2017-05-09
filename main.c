@@ -15,10 +15,16 @@
 
 /********** MAIN *********/
 
-/**************************/
-/*** TODO:              ***/
-/*** AI                 ***/
-/**************************/
+/* TODO:
+ * Choose no block by default
+ * Either assert sizeof(int) == 4 or make portable code
+ * Stop using char when int is good enough
+ * Use better names
+ * Stop “optimizing” with equivalent binary ops
+ * Stop writing autistic code
+ * Keep using gotos though, great shit
+ * Find out who pickedusername11 is
+ */
 
 int main(int argc, char **argv) {
     char f;      /* FLAG */
@@ -161,4 +167,3 @@ fits: /* HASN'T LOST YET */
     free(tt);
     return 0;
 }
-

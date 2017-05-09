@@ -65,4 +65,3 @@ void bkinsert(int n, int x, int y) {
         if (rbk(n, i, j))
             wttt(x+i, y+j);
 }
-
