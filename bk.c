@@ -9,6 +9,12 @@ int bk[NBK] = {1,3,7,15,31,33,
                7201,7300,7399,
                33825,1082401};
 
+/* NUMBER OF SQUARES IN EACH BLOCK (REQUIRED FOR SCORING) */
+int bksquares[NBK] = {1,2,3,4,5,
+                      2,3,3,3,3,
+                      4,3,5,5,5,
+                      5,9,4,5};
+
 //char bkprobs[] = {0,0,0,0,
 
 /* READ BK[N] */

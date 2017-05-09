@@ -18,7 +18,6 @@
 /**************************/
 /*** TODO:              ***/
 /*** AI                 ***/
-/*** SCORE              ***/
 /**************************/
 
 int main(int argc, char **argv) {
@@ -29,6 +28,9 @@ int main(int argc, char **argv) {
     char b;      /* INDEX OF USER CHOSEN BLOCK */
     char sc;     /* SUB COUNTER */
     char x, y;   /* POSITION OF BLOCK */
+    int score = 0;      /* CURRENT SCORE */
+    int movepoints = 0; /* POINTS GAINED BY THE LATEST MOVE */
+    int totalmoves = 0; /* NUMBER OF MOVES MADE */
     tt = (int*)calloc(4, 4); /* !!! HARDCODED SIZEOF(INT) = 4 */
     srand(time(NULL));
     initscr();
@@ -78,6 +80,9 @@ fits: /* HASN'T LOST YET */
         while (1) { /* KEYPRESSES */
             clear();
             printtt();
+            mvprintw(3, 30, "Score: %d", score);
+            mvprintw(4, 36, "+%d", movepoints);
+            mvprintw(5, 30, "Moves made: %d", totalmoves);
             mvaddch(11,  1, '1');
             mvaddch(11, 12, '2');
             mvaddch(11, 24, '3');
@@ -144,7 +149,12 @@ fits: /* HASN'T LOST YET */
             b = c;
             break;
         }
-        updatett();
+        /* SCORE IS CALCULATED FROM NUMBER OF SQUARES IN THE BLOCK
+         * AND THE NUMBER OF ROWS+COLUMNS REMOVED */
+        movepoints = bksquares[bks[b]];
+        movepoints += updatett();
+        score += movepoints;
+        totalmoves++;
         if (!(bka[0]+bka[1]+bka[2])) continue;
     }
     endwin();

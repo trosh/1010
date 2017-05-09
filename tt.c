@@ -48,7 +48,7 @@ void printtt() {
     attroff(COLOR_PAIR(1));
 }
 
-void updatett() {
+int updatett() {
     int x, y, f, xc, yc, i;
     xc = 0;
     yc = 0;
@@ -82,5 +82,6 @@ void updatett() {
     for (i=0; i<yc; i++) /* EMPTY FULL ROWS */
     for (x=0; x<10; x++)
         wftt(x, ys[i]);
+    return 5*(xc+yc)*(xc+yc+1);
 }
 
