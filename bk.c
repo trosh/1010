@@ -41,6 +41,11 @@ int bkfits(int n, int x, int y) {
         if (x+i > 9
          || y+j > 9)
             return -1; /* OUT OF BOUNDS */
+    }
+    for (i=0; i<5; i++) /* FOR EACH SUB BLOCK OF BK */
+    for (j=0; j<5; j++) {
+        if (!rbk(n, i, j)) /* IS IT AN ACTUAL SUB BLOCK ? */
+            continue;
         if (rtt(x+i, y+j))
             return 0; /* DOES NOT FIT */
     }
