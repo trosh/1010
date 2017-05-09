@@ -31,7 +31,7 @@ void printbk(char n, char x, char y, char c) {
     attroff(COLOR_PAIR(c));
 }
 
-/* DOES BLOCK FIT IN TT AT POS X, Y ? */
+/* DOES BLOCK N FIT IN TT AT POS X, Y ? */
 int bkfits(int n, int x, int y) {
     int i, j;
     for (i=0; i<5; i++) /* FOR EACH SUB BLOCK OF BK */

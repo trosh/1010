@@ -113,12 +113,12 @@ fits: /* HASN'T LOST YET */
                  && bkfits(bks[b], x, y+1) != -1)
                     y++;
                 break;
-            case 3 : /* RIGHT */
+            case 3 : /* UP */
                 if (y > 0
                  && bkfits(bks[b], x, y-1) != -1)
                     y--;
                 break;
-            case 5 : /* UP */
+            case 5 : /* RIGHT */
                 if (x < 9
                  && bkfits(bks[b], x+1, y) != -1)
                     x++;
@@ -129,7 +129,7 @@ fits: /* HASN'T LOST YET */
                     f = 1;
                 break;
             case 27 : /* ESCAPE */
-            case 'q' : /* Q */
+            case 'q' :
                 endwin();
                 free(tt);
                 return 0;
