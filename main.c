@@ -18,7 +18,6 @@
 /**************************/
 /*** TODO:              ***/
 /*** AI                 ***/
-/*** SCORE              ***/
 /**************************/
 
 int main(int argc, char **argv) {
@@ -29,6 +28,9 @@ int main(int argc, char **argv) {
     char b;      /* INDEX OF USER CHOSEN BLOCK */
     char sc;     /* SUB COUNTER */
     char x, y;   /* POSITION OF BLOCK */
+    unsigned int score=0; /* CURRENT SCORE */
+    unsigned int movepoints=0; /* POINTS GAINED BY THE LATEST MOVE */
+    unsigned int totalmoves=0; /* NUMBER OF MOVES MADE */
     tt = (int*)calloc(4, 4); /* !!! HARDCODED SIZEOF(INT) = 4 */
     srand(time(NULL));
     initscr();
@@ -61,8 +63,8 @@ int main(int argc, char **argv) {
         /* CHECK IF LOOSE */
         for (c=0; c<3; c++) /* FOR EACH BLOCK */
             if (bka[c]) /* IF BLOCK IS AVAILABLE */
-                for (y=0; y<5; y++) /* TEST EVERY POSITION */
-                for (x=0; x<5; x++)
+                for (y=0; y<10; y++) /* TEST EVERY POSITION */
+                for (x=0; x<10; x++)
                     if (bkfits(bks[c], x, y) == 1)
                         goto fits; /* FITS */
         attron(COLOR_PAIR(3));
@@ -78,6 +80,9 @@ fits: /* HASN'T LOST YET */
         while (1) { /* KEYPRESSES */
             clear();
             printtt();
+            mvprintw(3, 30, "Score: %d", score);
+            mvprintw(4, 36, "+%d", movepoints);
+            mvprintw(5, 30, "Moves made: %d", totalmoves);
             mvaddch(11,  1, '1');
             mvaddch(11, 12, '2');
             mvaddch(11, 24, '3');
@@ -113,12 +118,12 @@ fits: /* HASN'T LOST YET */
                  && bkfits(bks[b], x, y+1) != -1)
                     y++;
                 break;
-            case 3 : /* RIGHT */
+            case 3 : /* UP */
                 if (y > 0
                  && bkfits(bks[b], x, y-1) != -1)
                     y--;
                 break;
-            case 5 : /* UP */
+            case 5 : /* RIGHT */
                 if (x < 9
                  && bkfits(bks[b], x+1, y) != -1)
                     x++;
@@ -128,6 +133,7 @@ fits: /* HASN'T LOST YET */
                 if (bkfits(bks[b], x, y) == 1)
                     f = 1;
                 break;
+            case 27 : /* ESCAPE */
             case 'q' : /* Q */
                 endwin();
                 free(tt);
@@ -143,7 +149,12 @@ fits: /* HASN'T LOST YET */
             b = c;
             break;
         }
-        updatett();
+        /* SCORE IS CALCULATED FROM NUMBER OF SQUARES IN THE BLOCK
+           AND THE NUMBER OF ROWS+COLUMNS REMOVED */
+        movepoints=bksquares[bks[b]];
+        movepoints+=updatett();
+        score+=movepoints;
+        totalmoves++;
         if (!(bka[0]+bka[1]+bka[2])) continue;
     }
     endwin();

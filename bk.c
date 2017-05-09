@@ -9,10 +9,16 @@ int bk[NBK] = {1,3,7,15,31,33,
                7201,7300,7399,
                33825,1082401};
 
+/* NUMBER OF SQUARES IN EACH BLOCK (REQUIRED FOR SCORING) */
+int bksquares[NBK] = {1,2,3,4,5,
+                      2,3,3,3,3,
+                      4,3,5,5,5,
+                      5,9,4,5};
+
 //char bkprobs[] = {0,0,0,0,
 
 /* READ BK[N] */
-inline int rbk(int n, int x, int y) {
+int rbk(int n, int x, int y) {
     int i = 5*y+x;
     return bk[n] & (1<<i);
 }
@@ -31,7 +37,7 @@ void printbk(char n, char x, char y, char c) {
     attroff(COLOR_PAIR(c));
 }
 
-/* DOES BLOCK FIT IN TT AT POS X, Y ? */
+/* DOES BLOCK N FIT IN TT AT POS X, Y ? */
 int bkfits(int n, int x, int y) {
     int i, j;
     for (i=0; i<5; i++) /* FOR EACH SUB BLOCK OF BK */
@@ -41,6 +47,11 @@ int bkfits(int n, int x, int y) {
         if (x+i > 9
          || y+j > 9)
             return -1; /* OUT OF BOUNDS */
+    }
+    for (i=0; i<5; i++) /* FOR EACH SUB BLOCK OF BK */
+    for (j=0; j<5; j++) {
+        if (!rbk(n, i, j)) /* IS IT AN ACTUAL SUB BLOCK ? */
+            continue;
         if (rtt(x+i, y+j))
             return 0; /* DOES NOT FIT */
     }

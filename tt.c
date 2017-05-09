@@ -9,19 +9,19 @@ int ys[10];
  *     i>>5 <=> i/32
  *     i&31 <=> i%32
  */
-inline int rtt(int x, int y) {
+int rtt(int x, int y) {
     int i = 10*y+x; /* 2D -> 1D */
     return tt[i>>5] & (1<<(i&31));
 }
 
 /* WRITE TRUE TT */
-inline void wttt(int x, int y) {
+void wttt(int x, int y) {
     int i = 10*y+x;
     tt[i>>5] |= (1<<(i&31));
 }
 
 /* WRITE FALSE TT */
-inline void wftt(int x, int y) {
+void wftt(int x, int y) {
     int i = 10*y+x;
     tt[i>>5] &= ~(1<<(i&31));
 }
@@ -48,7 +48,7 @@ void printtt() {
     attroff(COLOR_PAIR(1));
 }
 
-void updatett() {
+int updatett() {
     int x, y, f, xc, yc, i;
     xc = 0;
     yc = 0;
@@ -82,5 +82,6 @@ void updatett() {
     for (i=0; i<yc; i++) /* EMPTY FULL ROWS */
     for (x=0; x<10; x++)
         wftt(x, ys[i]);
+    return 5*(xc+yc)*(xc+yc+1);
 }
 
