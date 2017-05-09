@@ -61,8 +61,8 @@ int main(int argc, char **argv) {
         /* CHECK IF LOOSE */
         for (c=0; c<3; c++) /* FOR EACH BLOCK */
             if (bka[c]) /* IF BLOCK IS AVAILABLE */
-                for (y=0; y<5; y++) /* TEST EVERY POSITION */
-                for (x=0; x<5; x++)
+                for (y=0; y<10; y++) /* TEST EVERY POSITION */
+                for (x=0; x<10; x++)
                     if (bkfits(bks[c], x, y) == 1)
                         goto fits; /* FITS */
         attron(COLOR_PAIR(3));
