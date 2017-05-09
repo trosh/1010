@@ -128,6 +128,7 @@ fits: /* HASN'T LOST YET */
                 if (bkfits(bks[b], x, y) == 1)
                     f = 1;
                 break;
+            case 27 : /* ESCAPE */
             case 'q' : /* Q */
                 endwin();
                 free(tt);
