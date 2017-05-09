@@ -12,7 +12,7 @@ int bk[NBK] = {1,3,7,15,31,33,
 //char bkprobs[] = {0,0,0,0,
 
 /* READ BK[N] */
-inline int rbk(int n, int x, int y) {
+int rbk(int n, int x, int y) {
     int i = 5*y+x;
     return bk[n] & (1<<i);
 }

@@ -9,19 +9,19 @@ int ys[10];
  *     i>>5 <=> i/32
  *     i&31 <=> i%32
  */
-inline int rtt(int x, int y) {
+int rtt(int x, int y) {
     int i = 10*y+x; /* 2D -> 1D */
     return tt[i>>5] & (1<<(i&31));
 }
 
 /* WRITE TRUE TT */
-inline void wttt(int x, int y) {
+void wttt(int x, int y) {
     int i = 10*y+x;
     tt[i>>5] |= (1<<(i&31));
 }
 
 /* WRITE FALSE TT */
-inline void wftt(int x, int y) {
+void wftt(int x, int y) {
     int i = 10*y+x;
     tt[i>>5] &= ~(1<<(i&31));
 }
