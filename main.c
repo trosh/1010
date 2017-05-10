@@ -88,16 +88,16 @@ fits: /* HASN'T LOST YET */
         while (1) { /* KEYPRESSES */
             clear();
             printtt();
-            mvprintw(3, 30, "Score: %d", score);
-            mvprintw(4, 36, "+%d", movepoints);
-            mvprintw(5, 30, "Moves made: %d", totalmoves);
-            mvaddch(11,  1, '1');
-            mvaddch(11, 12, '2');
-            mvaddch(11, 24, '3');
-            if (bka[0]) printbk(bks[0],  0, 12, 3);
-            if (bka[1]) printbk(bks[1],  5, 12, 4);
-            if (bka[2]) printbk(bks[2], 10, 12, 5);
-            if (b <3)   printbk(bks[b], x, y, b+3);
+            mvprintw(3, 40, "Score: %d", score);
+            mvprintw(4, 46, "+%d", movepoints);
+            mvprintw(5, 40, "Moves made: %d", totalmoves);
+            mvaddch(11, 36, '1');
+            mvaddch(11, 51, '2');
+            mvaddch(11, 66, '3');
+            if (bka[0]) printbk(bks[0], 11, 6, 3);
+            if (bka[1]) printbk(bks[1], 16, 6, 4);
+            if (bka[2]) printbk(bks[2], 21, 6, 5);
+            if (b < 3)  printbk(bks[b], x, y, b+3);
             refresh();
             c = getch();
             switch (c) {
