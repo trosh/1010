@@ -16,7 +16,6 @@
 /********** MAIN *********/
 
 /* TODO:
- * Choose no block by default
  * Either assert sizeof(int) == 4 or make portable code
  * Stop using char when int is good enough
  * Use better names
@@ -31,7 +30,8 @@ int main(int argc, char **argv) {
     char c;      /* INPUT CHARACTER / BLOCK NUMBER */
     char bks[3]; /* BLOCKS GIVEN TO USER */
     char bka[3]; /* FLAGS OF BLOCKS AVAILABLE ; TODO -> BITARRAY */
-    char b;      /* INDEX OF USER CHOSEN BLOCK */
+    char b;      /* INDEX OF USER CHOSEN BLOCK (3 = NO SELECTION) */
+    char oldb;   /* PREVIOUSY SELECTED BLOCK, REQUIRED FOR NEXT/PREV BLOCK */
     char sc;     /* SUB COUNTER */
     char x, y;   /* POSITION OF BLOCK */
     int score = 0;      /* CURRENT SCORE */
@@ -62,7 +62,9 @@ int main(int argc, char **argv) {
             bks[1] = rand()%NBK;
             bks[2] = rand()%NBK;
             bka[0] = bka[1] = bka[2] = 1;
-            b = 0;
+            b = 3; /* NO BLOCK SELECTED BY DEFAULT */
+            // PU11: BTW, very good idea, otherwise it plays like tetris - 
+            // I tend to place the block which is pre-selected
         }
         sc += 1;
         sc %= 3;
@@ -95,7 +97,7 @@ fits: /* HASN'T LOST YET */
             if (bka[0]) printbk(bks[0],  0, 12, 3);
             if (bka[1]) printbk(bks[1],  5, 12, 4);
             if (bka[2]) printbk(bks[2], 10, 12, 5);
-            printbk(bks[b], x, y, b+3);
+            if (b <3)   printbk(bks[b], x, y, b+3);
             refresh();
             c = getch();
             switch (c) {
@@ -114,29 +116,49 @@ fits: /* HASN'T LOST YET */
                 b = 2;
                 x = y = 5;
                 break;
+            /* SELECT PREVIOUS BLOCK */
+            case 44 : /* , */
+            case 60 : /* < */
+                if (b < 3) { /* IF SOME BLOCK IS SELECTED */
+                    oldb = b;
+                    while (!bka[++b%3]) {}
+                    b %= 3;
+                    if (oldb != b) x = y = 5;
+                }
+                break;
+            /* SELECT NEXT BLOCK */
+            case 46 : /* . */
+            case 62 : /* > */
+                if (b < 3) { /* IF SOME BLOCK IS SELECTED */
+                    oldb = b;
+                    while (!bka[++b%3]) {}
+                    b %= 3;
+                    if (oldb != b) x = y = 5;
+                }
+                break;
             case 4 : /* LEFT */
-                if (x > 0
+                if (b < 3 && x > 0
                  && bkfits(bks[b], x-1, y) != -1)
                     x--;
                 break;
             case 2 : /* DOWN */
-                if (y < 9
+                if (b < 3 && y < 9
                  && bkfits(bks[b], x, y+1) != -1)
                     y++;
                 break;
             case 3 : /* UP */
-                if (y > 0
+                if (b < 3 && y > 0
                  && bkfits(bks[b], x, y-1) != -1)
                     y--;
                 break;
             case 5 : /* RIGHT */
-                if (x < 9
+                if (b < 3 && x < 9
                  && bkfits(bks[b], x+1, y) != -1)
                     x++;
                 break;
             case 10 : /* ENTER */
             case 32 : /* SPACE */
-                if (bkfits(bks[b], x, y) == 1)
+                if (b < 3 && bkfits(bks[b], x, y) == 1)
                     f = 1;
                 break;
             case 27 : /* ESCAPE */
@@ -149,11 +171,19 @@ fits: /* HASN'T LOST YET */
         }
         bkinsert(bks[b], x, y);
         bka[b] = 0; /* BLOCK B NOT AVAILABLE */
-        for (c=0; c<3; c++) { /* CHOOSE NEW B */
-            if (b == c /* DON'T CHECK BKA[B] */
-             || !bka[c]) continue;
-            b = c;
-            break;
+        /* NO DEFAULT SELECTION UNLESS ONLY ONE BLOCK LEFT */
+        b = 0;
+        for (c=0; c<3; c++) { /* COUNT NUMBER OF AVAILABLE BLOCKS*/
+            b += bka[c];
+        }
+        if (b == 1) { /* ONLY ONE LEFT */
+            for (c=0; c<3; c++) { /* FIND WHICH ONE */
+                if (bka[c]) {
+                    b = c; /* SELECT THE LAST REMAINING BLOCK */
+                }
+            }
+        } else {
+            b = 3; /* NO SELECTION MADE */
         }
         /* SCORE IS CALCULATED FROM NUMBER OF SQUARES IN THE BLOCK
          * AND THE NUMBER OF ROWS+COLUMNS REMOVED */
