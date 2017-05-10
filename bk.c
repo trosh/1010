@@ -29,11 +29,16 @@ void printbk(char n, char x, char y, char c) {
     attron(COLOR_PAIR(c));
     for (j=0; j<5; j++)
     for (i=0; i<5; i++)
-        if (rbk(n, i, j))
-            if (rtt(x+i, y+j))
-                mvaddstr(y+j, x+i<<1, "xx");
-            else
-                mvaddstr(y+j, x+i<<1, "  ");
+        if (x < 10 && y < 10) { /* BLOCK ON THE GAME BOARD */
+            if (rbk(n, i, j))
+                if (rtt(x+i, y+j))
+                    mvaddstr((y+j)*2, (x+i)*3, "xx");
+                else
+                    mvaddstr((y+j)*2, (x+i)*3, "  ");
+        } else { /* BLOCK ON THE HINT SCREEN */
+            if (rbk(n, i, j))
+                mvaddstr((y+j)*2, (x+i)*3, "  ");
+        }
     attroff(COLOR_PAIR(c));
 }
 

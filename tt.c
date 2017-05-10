@@ -30,21 +30,47 @@ void wftt(int x, int y) {
 void printtt() {
     int x, y;
     move(0, 0);
-    for (y=0; y<10; y++) {
-        for (x=0; x<10; x++)
+    for (y=0; y<9; y++) {
+        for (x=0; x<10; x++) {
             if (rtt(x, y)) {
                 attron(COLOR_PAIR(2));
                 addstr("  ");
                 attroff(COLOR_PAIR(2));
             } else
                 addstr("  ");
+            if (x<9) addch(ACS_VLINE);
+        }
+        attron(COLOR_PAIR(1));
+        addstr("  ");
+        attroff(COLOR_PAIR(1));
+        addch('\n');
+        for (x=0;x<9;x++) {
+            addch(ACS_HLINE);
+            addch(ACS_HLINE);
+            addch(ACS_PLUS);
+        }
+        addch(ACS_HLINE);
+        addch(ACS_HLINE);
         attron(COLOR_PAIR(1));
         addstr("  ");
         attroff(COLOR_PAIR(1));
         addch('\n');
     }
+    for (x=0; x<10; x++) {
+        if (rtt(x, y)) {
+            attron(COLOR_PAIR(2));
+            addstr("  ");
+            attroff(COLOR_PAIR(2));
+        } else
+            addstr("  ");
+        if (x<9) addch(ACS_VLINE);
+    }
     attron(COLOR_PAIR(1));
-    addstr("                      ");
+    addstr("  ");
+    attroff(COLOR_PAIR(1));
+    addch('\n');
+    attron(COLOR_PAIR(1));
+    addstr("                               ");
     attroff(COLOR_PAIR(1));
 }
 
