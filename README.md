@@ -32,7 +32,7 @@ Controls
 
 - `1` `2` or `3` to choose block
 - `→` `↑` `←` or `↓` to move block
-- `⏎` or ` ` to place block
+- `⏎` or `␣` to place block
 - `,` or `<` to select previous block
 - `.` or `>` to select next block
 - `Esc` or `q` to quit
