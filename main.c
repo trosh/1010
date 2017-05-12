@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     int score = 0;      /* Current score */
     int movepoints = 0; /* Points gained by the latest move */
     int totalmoves = 0; /* Number of moves made */
-    tt = (int*)calloc(4, 4); /* !!! Hardcoded sizeof(int) = 4 */
+    tt = (int*)calloc(4, 4); /* ⚠  Hardcoded sizeof(int) = 4 */
     srand(time(NULL));
     initscr();
     raw();
