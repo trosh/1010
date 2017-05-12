@@ -2,7 +2,7 @@ CC := gcc
 
 .PHONY: run
 
-1010: main.c
+1010: main.c tt.c bk.c
 	$(CC) -o $@ $< -lncurses
 
 run: 1010

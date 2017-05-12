@@ -30,45 +30,54 @@ void wftt(int x, int y) {
 void printtt() {
     int x, y;
     move(0, 0);
-    for (y=0; y<9; y++) {
+    for (y=0; y<10; y++) {
         for (x=0; x<10; x++) {
             if (rtt(x, y)) {
                 attron(COLOR_PAIR(2));
                 addstr("  ");
                 attroff(COLOR_PAIR(2));
+                /* PRINT BORDERS BETWEEN TILES (RIGHTWARDS) */
+                if (x < 9 && rtt(x+1, y)) {
+                    attron(COLOR_PAIR(2));
+                }
             } else
                 addstr("  ");
-            if (x<9) addch(ACS_VLINE);
-        }
-        attron(COLOR_PAIR(1));
-        addstr("  ");
-        attroff(COLOR_PAIR(1));
-        addch('\n');
-        for (x=0;x<9;x++) {
-            addch(ACS_HLINE);
-            addch(ACS_HLINE);
-            addch(ACS_PLUS);
-        }
-        addch(ACS_HLINE);
-        addch(ACS_HLINE);
-        attron(COLOR_PAIR(1));
-        addstr("  ");
-        attroff(COLOR_PAIR(1));
-        addch('\n');
-    }
-    for (x=0; x<10; x++) {
-        if (rtt(x, y)) {
-            attron(COLOR_PAIR(2));
-            addstr("  ");
+            if (x < 9) {
+                addch(ACS_VLINE);
+            }
             attroff(COLOR_PAIR(2));
-        } else
+        }
+        attron(COLOR_PAIR(1));
+        addstr("  ");
+        attroff(COLOR_PAIR(1));
+        addch('\n');
+        if (y < 9) {
+            for (x=0; x<9; x++) {
+                /* BORDERS BETWEEN TILES (DOWNWARDS) */
+                if (y < 9
+                 && rtt(x, y) && rtt(x, y+1)) {
+                    attron(COLOR_PAIR(2));
+                }
+                addch(ACS_HLINE);
+                addch(ACS_HLINE);
+                attroff(COLOR_PAIR(2));
+                /* BORDERS BETWEEN TILES (DOWN-RIGHTWARDS) */
+                if (x < 9 && y < 9
+                 && rtt(x, y)   && rtt(x+1, y)
+                 && rtt(x, y+1) && rtt(x+1, y+1)) {
+                    attron(COLOR_PAIR(2));
+                }
+                addch(ACS_PLUS);
+                attroff(COLOR_PAIR(2));
+            }
+            addch(ACS_HLINE);
+            addch(ACS_HLINE);
+            attron(COLOR_PAIR(1));
             addstr("  ");
-        if (x<9) addch(ACS_VLINE);
+            attroff(COLOR_PAIR(1));
+            addch('\n');
+        }
     }
-    attron(COLOR_PAIR(1));
-    addstr("  ");
-    attroff(COLOR_PAIR(1));
-    addch('\n');
     attron(COLOR_PAIR(1));
     addstr("                               ");
     attroff(COLOR_PAIR(1));

@@ -28,17 +28,33 @@ void printbk(char n, char x, char y, char c) {
     char i, j;
     attron(COLOR_PAIR(c));
     for (j=0; j<5; j++)
-    for (i=0; i<5; i++)
-        if (x < 10 && y < 10) { /* BLOCK ON THE GAME BOARD */
-            if (rbk(n, i, j))
-                if (rtt(x+i, y+j))
-                    mvaddstr((y+j)*2, (x+i)*3, "xx");
-                else
-                    mvaddstr((y+j)*2, (x+i)*3, "  ");
-        } else { /* BLOCK ON THE HINT SCREEN */
-            if (rbk(n, i, j))
+    for (i=0; i<5; i++) {
+        if (rbk(n, i, j)) {
+            if (x < 10 && y < 10 /* BLOCK ON THE GAME BOARD */
+             && rtt(x+i, y+j)) { /* AND OVER EXISTING TILE */
+                mvaddstr((y+j)*2, (x+i)*3, "xx");
+            } else { /* HINT BOARD OR VALID TILE */
                 mvaddstr((y+j)*2, (x+i)*3, "  ");
+            }
+            /* PRINT BORDERS BETWEEN TILES (RIGHTWARDS) */
+            if (i < 4
+             && rbk(n, i+1, j)) {
+                mvaddch((y+j)*2, (x+i)*3+2, ACS_VLINE);
+            }
+            /* PRINT BORDERS BETWEEN TILES (DOWNWARDS) */
+            if (j < 4
+             && rbk(n, i, j+1)) {
+                mvaddch((y+j)*2+1, (x+i)*3,   ACS_HLINE);
+                mvaddch((y+j)*2+1, (x+i)*3+1, ACS_HLINE);
+            }
+            /* PRINT BORDERS BETWEEN TILES (DOWN-RIGHTWARDS) */
+            if (i < 4 && j < 4
+             && rbk(n, i+1, j) && rbk(n, i, j+1)
+             && rbk(n, i+1, j+1)) {
+                mvaddch((y+j)*2+1, (x+i)*3+2, ACS_PLUS);
+            }
         }
+    }
     attroff(COLOR_PAIR(c));
 }
 
