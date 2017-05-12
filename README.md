@@ -1,38 +1,38 @@
-
 1010
 ====
 
     /***********************/
-    /*** 1010 COPY       ***/
-    /*** BY TROSH        ***/
-    /*** FUN TIMES IN C! ***/
-    /*** ORIGINAL GAME   ***/
-    /*** BY GRAM GAMES   ***/
+    /*** 1010            ***/
+    /*** by trosh        ***/
+    /*** Fun times in c! ***/
+    /*** Original game   ***/
+    /*** by Gram Games   ***/
     /***********************/
 
-![1010 SCREENSHOT](1010.png)
+![1010 screenshot](1010.png)
 
-HOW TO BUILD
+How to build
 ------------
 
     make
 
-NEEDS NCURSES
+Needs ncurses
 
-HOW TO RUN
+How to run
 ----------
 
     make run
 
-OR
+or
 
     ./1010
 
-CONTROLS
+Controls
 --------
 
-- **1/2/3** TO CHOOSE BLOCK
-- **ARROW KEYS** TO MOVE BLOCK
-- **SPACE/RETURN** TO PLACE BLOCK
-- **,/. or </>** TO SELECT PREVIOUS/NEXT BLOCK
-- **ESCAPE/Q** TO QUIT
+- `1` `2` or `3` to choose block
+- `→` `↑` `←` or `↓` to move block
+- `⏎` or ` ` to place block
+- `,` or `<` to select previous block
+- `.` or `>` to select next block
+- `Esc` or `q` to quit

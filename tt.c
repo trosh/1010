@@ -1,11 +1,13 @@
-/********** TT ***********/
+/********** TT ************/
+/* Grid of tiles for 1010 */
+/**************************/
 
-int *tt; /* ROW MAJOR 10x10 BITARRAY IN INT[4] */
-/* ROWS AND COLS TO POP */
+int *tt; /* row major 10x10 bitarray in int[4] */
+/* Rows and cols to pop */
 int xs[10];
 int ys[10];
 
-/* READ TT
+/* Read tt
  *     i>>5 <=> i/32
  *     i&31 <=> i%32
  */
@@ -14,19 +16,19 @@ int rtt(int x, int y) {
     return tt[i>>5] & (1<<(i&31));
 }
 
-/* WRITE TRUE TT */
+/* Write true tt */
 void wttt(int x, int y) {
     int i = 10*y+x;
     tt[i>>5] |= (1<<(i&31));
 }
 
-/* WRITE FALSE TT */
+/* Write false tt */
 void wftt(int x, int y) {
     int i = 10*y+x;
     tt[i>>5] &= ~(1<<(i&31));
 }
 
-/* PRINT TT */
+/* Print tt */
 void printtt() {
     int x, y;
     move(0, 0);
@@ -36,7 +38,7 @@ void printtt() {
                 attron(COLOR_PAIR(2));
                 addstr("  ");
                 attroff(COLOR_PAIR(2));
-                /* PRINT BORDERS BETWEEN TILES (RIGHTWARDS) */
+                /* Print borders between tiles (rightwards) */
                 if (x < 9 && rtt(x+1, y)) {
                     attron(COLOR_PAIR(2));
                 }
@@ -52,8 +54,8 @@ void printtt() {
         attroff(COLOR_PAIR(1));
         addch('\n');
         if (y < 9) {
-            for (x=0; x<9; x++) {
-                /* BORDERS BETWEEN TILES (DOWNWARDS) */
+            for (x=0; x<10; x++) {
+                /* Borders between tiles (downwards) */
                 if (y < 9
                  && rtt(x, y) && rtt(x, y+1)) {
                     attron(COLOR_PAIR(2));
@@ -61,17 +63,17 @@ void printtt() {
                 addch(ACS_HLINE);
                 addch(ACS_HLINE);
                 attroff(COLOR_PAIR(2));
-                /* BORDERS BETWEEN TILES (DOWN-RIGHTWARDS) */
-                if (x < 9 && y < 9
-                 && rtt(x, y)   && rtt(x+1, y)
-                 && rtt(x, y+1) && rtt(x+1, y+1)) {
-                    attron(COLOR_PAIR(2));
+                /* Borders between tiles (down-rightwards) */
+                if (x < 9) {
+                    if (y < 9
+                     && rtt(x, y)   && rtt(x+1, y)
+                     && rtt(x, y+1) && rtt(x+1, y+1)) {
+                        attron(COLOR_PAIR(2));
+                    }
+                    addch(ACS_PLUS);
+                    attroff(COLOR_PAIR(2));
                 }
-                addch(ACS_PLUS);
-                attroff(COLOR_PAIR(2));
             }
-            addch(ACS_HLINE);
-            addch(ACS_HLINE);
             attron(COLOR_PAIR(1));
             addstr("  ");
             attroff(COLOR_PAIR(1));
@@ -87,7 +89,7 @@ int updatett() {
     int x, y, f, xc, yc, i;
     xc = 0;
     yc = 0;
-    for (x=0; x<10; x++) { /* FIND FULL COLS */
+    for (x=0; x<10; x++) { /* Find full cols */
         f = 1;
         for (y=0; y<10; y++)
             if (!rtt(x, y)) {
@@ -99,7 +101,7 @@ int updatett() {
             xc++;
         }
     }
-    for (y=0; y<10; y++) { /* FIND FULL ROWS */
+    for (y=0; y<10; y++) { /* Find full rows */
         f = 1;
         for (x=0; x<10; x++)
             if (!rtt(x, y)) {
@@ -111,12 +113,11 @@ int updatett() {
             yc++;
         }
     }
-    for (i=0; i<xc; i++) /* EMPTY FULL COLS */
+    for (i=0; i<xc; i++) /* Empty full cols */
     for (y=0; y<10; y++)
         wftt(xs[i], y);
-    for (i=0; i<yc; i++) /* EMPTY FULL ROWS */
+    for (i=0; i<yc; i++) /* Empty full rows */
     for (x=0; x<10; x++)
         wftt(x, ys[i]);
     return 5*(xc+yc)*(xc+yc+1);
 }
-
