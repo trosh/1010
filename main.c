@@ -22,7 +22,6 @@
  * Stop “optimizing” with equivalent binary ops
  * Stop writing autistic code
  * Keep using gotos though, great shit
- * Find out who pickedusername11 is
  */
 
 int main(int argc, char **argv) {
@@ -119,22 +118,28 @@ fits: /* HASN'T LOST YET */
             /* SELECT PREVIOUS BLOCK */
             case 44 : /* , */
             case 60 : /* < */
+                oldb = b;
                 if (b < 3) { /* IF SOME BLOCK IS SELECTED */
-                    oldb = b;
-                    while (!bka[++b%3]) {}
-                    b %= 3;
-                    if (oldb != b) x = y = 5;
+                    b += 2;
+                } else {
+                    b = 2;
                 }
+                while (!bka[b%3]) b--;
+                b %= 3;
+                if (oldb != b) x = y = 5;
                 break;
             /* SELECT NEXT BLOCK */
             case 46 : /* . */
             case 62 : /* > */
+                oldb = b;
                 if (b < 3) { /* IF SOME BLOCK IS SELECTED */
-                    oldb = b;
-                    while (!bka[++b%3]) {}
-                    b %= 3;
-                    if (oldb != b) x = y = 5;
+                    b++;
+                } else {
+                    b = 0;
                 }
+                while (!bka[b%3]) b++;
+                b %= 3;
+                if (oldb != b) x = y = 5;
                 break;
             case 4 : /* LEFT */
                 if (b < 3 && x > 0
