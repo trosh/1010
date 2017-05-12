@@ -4,7 +4,7 @@
     /***********************/
     /*** 1010            ***/
     /*** by trosh        ***/
-    /*** Fun times in c! ***/
+    /*** Fun times in C! ***/
     /*** Original game   ***/
     /*** by Gram Games   ***/
     /***********************/
