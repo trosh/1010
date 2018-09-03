@@ -30,29 +30,17 @@ void printbk(char n, char x, char y, char c) {
     for (j=0; j<5; j++)
     for (i=0; i<5; i++) {
         if (rbk(n, i, j)) {
+            attron(A_UNDERLINE);
             if (x < 10 && y < 10 /* Block on the game board */
              && rtt(x+i, y+j)) { /* And over existing tile */
-                mvaddstr((y+j)*2, (x+i)*3, "xx");
+                mvaddstr((y+j), (x+i)*3, "xx");
             } else { /* Hint board or valid tile */
-                mvaddstr((y+j)*2, (x+i)*3, "  ");
+                mvaddstr((y+j), (x+i)*3, "  ");
             }
             /* Print borders between tiles (rightwards) */
-            if (i < 4
-             && rbk(n, i+1, j)) {
-                mvaddch((y+j)*2, (x+i)*3+2, ACS_VLINE);
-            }
-            /* Print borders between tiles (downwards) */
-            if (j < 4
-             && rbk(n, i, j+1)) {
-                mvaddch((y+j)*2+1, (x+i)*3,   ACS_HLINE);
-                mvaddch((y+j)*2+1, (x+i)*3+1, ACS_HLINE);
-            }
-            /* Print borders between tiles (down-rightwards) */
-            if (i < 4 && j < 4
-             && rbk(n, i+1, j) && rbk(n, i, j+1)
-             && rbk(n, i+1, j+1)) {
-                mvaddch((y+j)*2+1, (x+i)*3+2, ACS_PLUS);
-            }
+            mvadd_wch((y+j), (x+i)*3+2, &vert_sep_right);
+            attroff(A_UNDERLINE);
+            // The downwards border is always present (with A_UNDERLINE)
         }
     }
     attroff(COLOR_PAIR(c));

@@ -3,7 +3,7 @@ CC := gcc
 .PHONY: run
 
 1010: main.c tt.c bk.c
-	$(CC) -o $@ $< -lncurses
+	$(CC) -o $@ $< -lncursesw -D_XOPEN_SOURCE_EXTENDED
 
 run: 1010
 	./1010

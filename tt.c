@@ -2,6 +2,10 @@
 /* Grid of tiles for 1010 */
 /**************************/
 
+//Unicode block character
+const cchar_t vert_sep_right = {A_NORMAL, 0x2590};
+const cchar_t vert_sep_full = {A_NORMAL, 0x2588};
+
 int *tt; /* row major 10x10 bitarray in int[4] */
 /* Rows and cols to pop */
 int xs[10];
@@ -33,55 +37,28 @@ void printtt() {
     int x, y;
     move(0, 0);
     for (y=0; y<10; y++) {
+        attron(A_UNDERLINE);
         for (x=0; x<10; x++) {
             if (rtt(x, y)) {
                 attron(COLOR_PAIR(2));
                 addstr("  ");
+                // Fill + Rightwards border = full block
+                add_wch(&vert_sep_full);
                 attroff(COLOR_PAIR(2));
-                /* Print borders between tiles (rightwards) */
-                if (x < 9 && rtt(x+1, y)) {
-                    attron(COLOR_PAIR(2));
-                }
-            } else
+            } else {
                 addstr("  ");
-            if (x < 9) {
-                addch(ACS_VLINE);
+                add_wch(&vert_sep_right);
             }
             attroff(COLOR_PAIR(2));
         }
+        attroff(A_UNDERLINE);
         attron(COLOR_PAIR(1));
         addstr("  ");
         attroff(COLOR_PAIR(1));
         addch('\n');
-        if (y < 9) {
-            for (x=0; x<10; x++) {
-                /* Borders between tiles (downwards) */
-                if (y < 9
-                 && rtt(x, y) && rtt(x, y+1)) {
-                    attron(COLOR_PAIR(2));
-                }
-                addch(ACS_HLINE);
-                addch(ACS_HLINE);
-                attroff(COLOR_PAIR(2));
-                /* Borders between tiles (down-rightwards) */
-                if (x < 9) {
-                    if (y < 9
-                     && rtt(x, y)   && rtt(x+1, y)
-                     && rtt(x, y+1) && rtt(x+1, y+1)) {
-                        attron(COLOR_PAIR(2));
-                    }
-                    addch(ACS_PLUS);
-                    attroff(COLOR_PAIR(2));
-                }
-            }
-            attron(COLOR_PAIR(1));
-            addstr("  ");
-            attroff(COLOR_PAIR(1));
-            addch('\n');
-        }
     }
     attron(COLOR_PAIR(1));
-    addstr("                               ");
+    addstr("                                ");
     attroff(COLOR_PAIR(1));
 }
 

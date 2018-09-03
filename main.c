@@ -2,6 +2,7 @@
 #include <stdlib.h>  /* calloc, srand, rand */
 #include <time.h>    /* time */
 #include <ncurses.h>
+#include <locale.h>
 #include "tt.c"
 #include "bk.c"
 
@@ -28,6 +29,7 @@ int main(int argc, char **argv) {
     int totalmoves = 0; /* Number of moves made */
     tt = (int*)calloc(4, 4); /* ⚠  Hardcoded sizeof(int) = 4 */
     srand(time(NULL));
+    setlocale(LC_ALL, "en_US.UTF-8");
     initscr();
     raw();
     noecho();
@@ -81,9 +83,9 @@ fits: /* Hasn't lost yet */
             mvaddch(11, 36, '1');
             mvaddch(11, 51, '2');
             mvaddch(11, 66, '3');
-            if (bka[0]) printbk(bks[0], 11, 6, 3);
-            if (bka[1]) printbk(bks[1], 16, 6, 4);
-            if (bka[2]) printbk(bks[2], 21, 6, 5);
+            if (bka[0]) printbk(bks[0], 11, 12, 3);
+            if (bka[1]) printbk(bks[1], 16, 12, 4);
+            if (bka[2]) printbk(bks[2], 21, 12, 5);
             if (b < 3)  printbk(bks[b], x, y, b+3);
             refresh();
             c = getch();
