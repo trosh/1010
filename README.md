@@ -16,7 +16,7 @@ How to build
 
     make
 
-Needs ncurses
+Needs ncursesw (something like "apt install libncursesw5-dev")
 
 How to run
 ----------
