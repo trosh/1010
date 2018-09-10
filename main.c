@@ -17,7 +17,7 @@
 
 #define HISCORE_FILE "1010.his"
 
-void save_hi_score (uint score) {
+void save_hi_score (long long int score) {
     FILE *file = fopen(HISCORE_FILE, "w");
     if (file) {
         fwrite(&score, sizeof(score), 1, file);
@@ -26,9 +26,9 @@ void save_hi_score (uint score) {
     return;
 }
 
-uint read_hi_score () {
+long long int read_hi_score () {
     FILE *file = fopen(HISCORE_FILE, "r");
-    uint hiscore = 0;
+    long long int hiscore = 0;
     if (file) {
         fread(&hiscore, sizeof(hiscore), 1, file);
         fclose(file);
@@ -45,8 +45,8 @@ int main(int argc, char **argv) {
     char oldb;   /* Previousy selected block, required for next/prev block */
     char sc;     /* Sub counter */
     char x, y;   /* Position of block */
-    uint hiscore = read_hi_score(HISCORE_FILE);
-    uint score = 0;      /* Current score */
+    long long int hiscore = read_hi_score(HISCORE_FILE);
+    long long int score = 0;      /* Current score */
     int movepoints = 0; /* Points gained by the latest move */
     int totalmoves = 0; /* Number of moves made */
     tt = (int*)calloc(4, 4); /* ⚠  Hardcoded sizeof(int) = 4 */
