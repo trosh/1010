@@ -15,6 +15,27 @@
  * Keep using gotos though, great shit
  */
 
+#define HISCORE_FILE "1010.his"
+
+void save_hi_score (long long int score) {
+    FILE *file = fopen(HISCORE_FILE, "w");
+    if (file) {
+        fwrite(&score, sizeof(score), 1, file);
+        fclose(file);
+    }
+    return;
+}
+
+long long int read_hi_score () {
+    FILE *file = fopen(HISCORE_FILE, "r");
+    long long int hiscore = 0;
+    if (file) {
+        fread(&hiscore, sizeof(hiscore), 1, file);
+        fclose(file);
+    }
+    return hiscore;
+}
+
 int main(int argc, char **argv) {
     char f;      /* Flag */
     char c;      /* Input character / block number */
@@ -24,7 +45,8 @@ int main(int argc, char **argv) {
     char oldb;   /* Previousy selected block, required for next/prev block */
     char sc;     /* Sub counter */
     char x, y;   /* Position of block */
-    int score = 0;      /* Current score */
+    long long int hiscore = read_hi_score(HISCORE_FILE);
+    long long int score = 0;      /* Current score */
     int movepoints = 0; /* Points gained by the latest move */
     int totalmoves = 0; /* Number of moves made */
     tt = (int*)calloc(4, 4); /* ⚠  Hardcoded sizeof(int) = 4 */
@@ -77,6 +99,7 @@ fits: /* Hasn't lost yet */
         while (1) { /* Keypresses */
             clear();
             printtt();
+            mvprintw(2, 40, "HIGH SCORE: %d", hiscore);
             mvprintw(3, 40, "SCORE: %d", score);
             mvprintw(4, 46, "+%d", movepoints);
             mvprintw(5, 40, "MOVES MADE: %d", totalmoves);
@@ -155,6 +178,7 @@ fits: /* Hasn't lost yet */
                 break;
               case 27 : /* Escape */
               case 'q' :
+                if (score > hiscore) save_hi_score(score);
                 endwin();
                 free(tt);
                 return 0;
@@ -181,7 +205,9 @@ fits: /* Hasn't lost yet */
         totalmoves++;
         if (!(bka[0]+bka[1]+bka[2])) continue;
     }
+    if (score > hiscore) save_hi_score(score);
     endwin();
     free(tt);
     return 0;
 }
+
